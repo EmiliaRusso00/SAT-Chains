@@ -1,0 +1,58 @@
+experiments:
+
+#   - id: 1
+#     logical_graph: "graphs/K4.txt"
+#     logical_graph_json: graphs/K4.json
+#     physical_graph: "graphs/chimera3x3.txt"
+#     physical_graph_json: graphs/chimera3x3.json
+#     timeout_seconds: 600
+#     embedding_constraints:
+#       default_allowed_expansions: [1,2,3]
+#       per_node:
+#         0: [1]
+#         1: [1]
+#         2: [2]
+#         3: [2]
+#       fixed_mapping:
+#         0: [20]
+#         1: [18]         
+#
+#   - id: 2
+#     logical_graph: "graphs/K6.txt"
+#     logical_graph_json: graphs/K6.json
+#     physical_graph: "graphs/chimera3x3.txt"
+#     physical_graph_json: graphs/chimera3x3.json
+#     timeout_seconds: 3360
+# 
+#     embedding_constraints:
+#       default_allowed_expansions: [1,2,3]
+#       per_node:
+#         0: [2]
+#         1: [2]
+#         2: [2]
+#         3: [3]
+#         4: [3]
+#         5: [2]
+
+  
+   - id: 3
+     logical_graph: "graphs/K5.txt"
+     logical_graph_json: graphs/K5.json
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: graphs/zephyr1.json
+     timeout_seconds: 3360
+ 
+     embedding_constraints:
+       default_allowed_expansions: [1,2,3]
+       per_node:
+         0: [1]
+         1: [1]
+         2: [2]
+         3: [1]
+         4: [1]
+         5: [1]
+       fixed_mapping:
+         0: [10]
+         1: [11]
+         3: [36]
+         4: [37]
