@@ -45,7 +45,7 @@ def plot_embedding_results(G_logical, solution_json, save_dir, exp_id,
         raise ValueError(f"Unknown physical graph type: {gtype}")
 
     # ---------------------------
-    # 1️⃣ Grafo logico
+    # 1️ Grafo logico
     # ---------------------------
     plt.figure(figsize=(6,6))
     nx.draw(G_logical, with_labels=show_labels, node_color='skyblue', node_size=200)
@@ -57,7 +57,7 @@ def plot_embedding_results(G_logical, solution_json, save_dir, exp_id,
     print(f"[INFO] Logical graph saved: {path_log}")
 
     # ---------------------------
-    # 2️⃣ Grafo fisico D-Wave
+    # 2️ Grafo fisico D-Wave
     # ---------------------------
     plt.figure(figsize=(8,8))
     if gtype == "chimera":
@@ -74,8 +74,10 @@ def plot_embedding_results(G_logical, solution_json, save_dir, exp_id,
     print(f"[INFO] Physical graph saved: {path_phys}")
 
     # ---------------------------
-    # 3️⃣ Embedding SAT con nodi fisici etichettati
-    chain_colors = ['yellow', 'red', 'cyan', 'green', 'orange', 'purple', 'magenta', 'pink']
+    # 3️Embedding SAT con nodi fisici etichettati
+    chain_colors = ['yellow', 'red', 'cyan', 'green', 'orange', 'purple', 'magenta', 'pink', 'brown', 'olive', 'teal', 'navy', 'lime', 'coral',
+                    'gold', 'salmon', 'turquoise', 'violet', 'indigo', 'chocolate', 'crimson', 'darkgreen', 'darkblue', 'darkred', 'darkorange'
+                    'darkcyan', 'darkmagenta', 'darkgoldenrod', 'darkolivegreen', 'darkslateblue', 'darkturquoise']
 
     phys_to_logical = {}
     # ordina per nodo logico

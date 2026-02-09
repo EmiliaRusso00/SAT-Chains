@@ -11,7 +11,7 @@ from utils import ensure_dir
 from plot_utils import plot_embedding_results
 
 
-def run_experiment(cfg):
+def run_experiment(cfg, max_attempts=None):
     exp_id = cfg.get("id", 0)
     print(f"\n[INFO] Running experiment ID: {exp_id}")
 
@@ -26,7 +26,6 @@ def run_experiment(cfg):
     G_phys_json, physical_metadata = read_graph_json(cfg.get("physical_graph_json"))
 
     timeout = cfg.get("timeout_seconds", None)
-    max_solutions = cfg.get("max_solutions", 40)
 
     # --- CNF Generator ---
     gen = CNFGenerator(
@@ -50,13 +49,21 @@ def run_experiment(cfg):
     dimacs_path = os.path.join(exp_dir_base, f"exp_{exp_id}.cnf")
     gen.write_dimacs(dimacs_path)
 
-    # --- Solving multi-soluzione ---
-    print(f"[INFO] Solving SAT (max {max_solutions} tentativi)...")
+    # --- Solving SAT ---
+    print("[INFO] Solving SAT...")
     total_sat_time = 0.0
-    rev = {vid: (i, idx) for (i, idx), vid in gen.chain_var_map.items()}
+    tentativo = 1
     found_any = False
+    stopped_early = False
 
-    for k in range(1, max_solutions + 1):
+    rev = {vid: (i, idx) for (i, idx), vid in gen.chain_var_map.items()}
+
+    while True:
+        if max_attempts is not None and tentativo > max_attempts:
+            print(f"[INFO] Stop volontario dopo {max_attempts} tentativi SAT.")
+            stopped_early = True
+            break
+
         t_start = time.time()
         res = solve_dimacs_file(
             dimacs_path,
@@ -67,11 +74,13 @@ def run_experiment(cfg):
         total_sat_time += sat_one_time
 
         if res.get("status") != "SAT" or not res.get("model"):
-            print("[INFO] Nessun'altra soluzione SAT.")
+            print("[INFO] Nessun'altra soluzione SAT (UNSAT o timeout).")
             break
 
         found_any = True
-        tentativo_dir = os.path.join(exp_dir_base, f"tentativo_{k}")
+
+        # --- Directory tentativo ---
+        tentativo_dir = os.path.join(exp_dir_base, f"tentativo_{tentativo}")
         ensure_dir(tentativo_dir)
 
         # --- Ricostruzione soluzione ---
@@ -81,12 +90,12 @@ def run_experiment(cfg):
                 entry = rev.get(lit)
                 if entry is not None:
                     i, chain_idx = entry
-                    chain_nodes = gen.valid_chains[i][chain_idx]
-                    solution_map[i] = list(chain_nodes)
+                    solution_map[i] = list(gen.valid_chains[i][chain_idx])
 
-        print(f"[SUCCESS] Soluzione SAT trovata → tentativo_{k} (tempo SAT: {sat_one_time:.2f}s)")
+        print(f"[SUCCESS] Soluzione SAT trovata → tentativo_{tentativo} "
+              f"(tempo SAT: {sat_one_time:.2f}s)")
 
-        # --- Scrittura output per tentativo ---
+        # --- Scrittura output ---
         write_experiment_output(
             exp_id=exp_id,
             config=cfg,
@@ -99,26 +108,31 @@ def run_experiment(cfg):
             time_cnf=time_cnf,
             time_sat=sat_one_time,
             status="SAT",
-            solution=[{"assignment": solution_map, "sat_time": sat_one_time}],
+            solution=[{
+                "assignment": solution_map,
+                "sat_time": sat_one_time
+            }],
             output_dir=tentativo_dir
         )
 
-        # --- Plot per tentativo ---
+        # --- Plot ---
         plot_embedding_results(
             G_logical=G_log_json,
             solution_json={"solutions": [{"assignment": solution_map}]},
             save_dir=tentativo_dir,
-            exp_id=f"{exp_id}_tentativo_{k}",
+            exp_id=f"{exp_id}_tentativo_{tentativo}",
             physical_metadata=physical_metadata,
             show_labels=True
         )
 
-        # --- Blocking clause per prossima soluzione ---
+        # --- Blocking clause ---
         gen.add_blocking_clause_from_model(res["model"])
         gen.write_dimacs(dimacs_path)
 
-    if not found_any:
-        # output UNSAT a livello di esperimento
+        tentativo += 1
+
+    # --- Output finale UNSAT certificato ---
+    if not found_any and not stopped_early:
         write_experiment_output(
             exp_id=exp_id,
             config=cfg,
@@ -137,8 +151,23 @@ def run_experiment(cfg):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=str, default="config.yaml")
+    parser = argparse.ArgumentParser(description="SAT-based graph embedding runner")
+
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="config.yaml",
+        help="File di configurazione YAML"
+    )
+
+    parser.add_argument(
+        "--max-attempts",
+        type=int,
+        default=None,
+        help="Numero massimo di soluzioni SAT da enumerare "
+             "(default: None → fino a UNSAT certificato)"
+    )
+
     args = parser.parse_args()
 
     with open(args.config, "r") as f:
@@ -147,4 +176,4 @@ if __name__ == "__main__":
     ensure_dir("outputs")
 
     for cfg in cfg_all.get("experiments", []):
-        run_experiment(cfg)
+        run_experiment(cfg, max_attempts=args.max_attempts)

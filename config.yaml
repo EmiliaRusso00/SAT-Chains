@@ -1,58 +1,65 @@
 experiments:
 
-#   - id: 1
-#     logical_graph: "graphs/K4.txt"
-#     logical_graph_json: graphs/K4.json
-#     physical_graph: "graphs/chimera3x3.txt"
-#     physical_graph_json: graphs/chimera3x3.json
-#     timeout_seconds: 600
-#     embedding_constraints:
-#       default_allowed_expansions: [1,2,3]
-#       per_node:
-#         0: [1]
-#         1: [1]
-#         2: [2]
-#         3: [2]
-#       fixed_mapping:
-#         0: [20]
-#         1: [18]         
-#
-#   - id: 2
-#     logical_graph: "graphs/K6.txt"
-#     logical_graph_json: graphs/K6.json
-#     physical_graph: "graphs/chimera3x3.txt"
-#     physical_graph_json: graphs/chimera3x3.json
-#     timeout_seconds: 3360
-# 
-#     embedding_constraints:
-#       default_allowed_expansions: [1,2,3]
-#       per_node:
-#         0: [2]
-#         1: [2]
-#         2: [2]
-#         3: [3]
-#         4: [3]
-#         5: [2]
+# Rispetto al paper delle clique, ci si domanda se una Klxm+1 con chain = m+1 sia embeddabile anche se non native 
 
-  
-   - id: 3
-     logical_graph: "graphs/K5.txt"
-     logical_graph_json: graphs/K5.json
-     physical_graph: "graphs/zephyr1.txt"
-     physical_graph_json: graphs/zephyr1.json
-     timeout_seconds: 3360
- 
-     embedding_constraints:
-       default_allowed_expansions: [1,2,3]
-       per_node:
-         0: [1]
-         1: [1]
-         2: [2]
-         3: [1]
-         4: [1]
-         5: [1]
-       fixed_mapping:
-         0: [10]
-         1: [11]
-         3: [36]
-         4: [37]
+    - id: 3
+      logical_graph: "graphs/K9.txt"
+      logical_graph_json: graphs/K9.json
+      physical_graph: "graphs/chimera2x2.txt"
+      physical_graph_json: graphs/chimera2x2.json
+      timeout_seconds: 600
+      embedding_constraints:
+        default_allowed_expansions: [1,2,3]
+
+    - id: 4
+      logical_graph: "graphs/K13.txt"
+      logical_graph_json: graphs/K13.json
+      physical_graph: "graphs/chimera3x3.txt"
+      physical_graph_json: graphs/chimera3x3.json
+      timeout_seconds: 600
+      embedding_constraints:
+        default_allowed_expansions: [1,2,3,4]
+
+    - id: 5
+      logical_graph: "graphs/K17.txt"
+      logical_graph_json: graphs/K17.json
+      physical_graph: "graphs/chimera4x4.txt"
+      physical_graph_json: graphs/chimera4x4.json
+      timeout_seconds: 600
+      embedding_constraints:
+        default_allowed_expansions: [1,2,3,4,5]
+    
+    - id: 6
+      logical_graph: "graphs/K21.txt"
+      logical_graph_json: graphs/K21.json
+      physical_graph: "graphs/chimera5x5.txt"
+      physical_graph_json: graphs/chimera5x5.json
+      timeout_seconds: 600
+      embedding_constraints:
+        default_allowed_expansions: [1,2,3,4,5,6]
+
+
+# Su cosa vanno fatti gli esperimenti.MinorMiner può: trovare un embedding con chain max = 4 Non può dire: “chain ≤ 3 è impossibile”
+
+    - id: 1
+      logical_graph: "graphs/K16.txt"
+      logical_graph_json: graphs/K16.json
+      physical_graph: "graphs/zephyr1.txt"
+      physical_graph_json: graphs/zephyr1.json
+      timeout_seconds: 600
+      embedding_constraints:
+        default_allowed_expansions: [1,2]
+
+
+# Se trova l'embedding ci si potrebbe domandare se esiste un tentativo che usi chain max = 3 minore. 
+    - id: 2
+      logical_graph: "graphs/K16.txt"
+      logical_graph_json: graphs/K16.json
+      physical_graph: "graphs/zephyr1.txt"
+      physical_graph_json: graphs/zephyr1.json
+      timeout_seconds: 600
+      embedding_constraints:
+        default_allowed_expansions: [1,2,3]
+
+
+
