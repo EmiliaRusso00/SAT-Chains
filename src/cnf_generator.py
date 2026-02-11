@@ -1,170 +1,171 @@
-from itertools import combinations
 import networkx as nx
+from itertools import combinations
 import os
 
 class CNFGenerator:
 
     def __init__(self, G_log, G_phys, embedding_constraints=None,
                  exp_dir=None, exp_id=0):
+
         self.G_log = G_log
         self.G_phys = G_phys
-        self.exp_dir = exp_dir
-        self.exp_id = exp_id
         self.embedding_constraints = embedding_constraints or {}
+
+        self.exp_dir = exp_dir or "."
+        self.exp_id = exp_id
 
         self.embeddable = True
         self.reject_reasons = []
 
-        self.logical_nodes = list(sorted(G_log.nodes()))
-        self.physical_nodes = list(sorted(G_phys.nodes()))
+        self.logical_nodes = sorted(G_log.nodes())
+        self.physical_nodes = sorted(G_phys.nodes())
+
+        self.valid_chains = {}        # i -> list of components
+        self.chain_var_map = {}       # (i, idx) -> var
         self.num_vars = 0
-        self.chain_var_map = {}   # (logical_node, chain_idx) -> SAT var
+
         self.clauses = []
-        self.clause_type = []
-        self.clause_set = set()  # per evitare clausole duplicate
 
-    # -------------------------
-    def add_clause(self, lits, ctype="generic"):
-        key = tuple(sorted(lits))
-        if key not in self.clause_set:
-            self.clauses.append(list(lits))
-            self.clause_type.append(ctype)
-            self.clause_set.add(key)
+    # --------------------------------------------------
+    # Clause helper
+    # --------------------------------------------------
+    def add_clause(self, lits):
+        self.clauses.append(list(lits))
 
-    # -------------------------
-    def generate_chain_variables(self):
-        """Genera tutte le catene connesse per ogni nodo logico e assegna variabili SAT"""
-        self.valid_chains = {}  # nodo logico -> lista di tuple (chain_nodes)
+    # --------------------------------------------------
+    # Generate CONNECTED components (no path restriction)
+    # --------------------------------------------------
+    def generate_connected_chains(self):
         vid = 1
+        default_sizes = self.embedding_constraints.get(
+            "default_allowed_expansions", [1]
+        )
 
-        default_allowed = self.embedding_constraints.get("default_allowed_expansions", [1])
+        per_node = self.embedding_constraints.get("per_node", {})
+        fixed = self.embedding_constraints.get("fixed_mapping", {})
 
         for i in self.logical_nodes:
-            allowed = self.embedding_constraints.get("per_node", {}).get(i, default_allowed)
+            allowed_sizes = per_node.get(i, default_sizes)
+            required = set(fixed.get(i, []))
+
             chains = []
-            for length in allowed:
-                for nodes in combinations(self.physical_nodes, length):
-                    if nx.is_connected(self.G_phys.subgraph(nodes)):
-                        chains.append(nodes)
+
+            for size in allowed_sizes:
+                for subset in combinations(self.physical_nodes, size):
+                    S = set(subset)
+                    if not required.issubset(S):
+                        continue
+                    if nx.is_connected(self.G_phys.subgraph(S)):
+                        chains.append(tuple(sorted(S)))
+
             if not chains:
                 self.embeddable = False
-                self.reject_reasons.append(f"Nessuna catena valida per nodo logico {i}")
-                continue
-            self.valid_chains[i] = chains
+                self.reject_reasons.append(
+                    f"Nessuna chain valida per nodo logico {i}"
+                )
+                return
 
-            # assegna variabili SAT per le catene
-            for idx, _ in enumerate(chains):
+            self.valid_chains[i] = chains
+            for idx in range(len(chains)):
                 self.chain_var_map[(i, idx)] = vid
                 vid += 1
 
         self.num_vars = vid - 1
 
-    # -------------------------
-    def encode_exactly_one_chain_per_logical(self):
-        """Almeno una catena per nodo logico + mutual exclusion tra catene dello stesso nodo"""
+    # --------------------------------------------------
+    # CNF encoding
+    # --------------------------------------------------
+    def encode_exactly_one(self):
         for i, chains in self.valid_chains.items():
-            # Almeno una
-            lits = [self.chain_var_map[(i, idx)] for idx in range(len(chains))]
-            self.add_clause(lits, "at_least_one_chain")
+            vars_i = [
+                self.chain_var_map[(i, idx)]
+                for idx in range(len(chains))
+            ]
 
-            # Al massimo una
-            for idx1, idx2 in combinations(range(len(chains)), 2):
-                self.add_clause([-self.chain_var_map[(i, idx1)], -self.chain_var_map[(i, idx2)]],
-                                "at_most_one_chain")
+            self.add_clause(vars_i)  # at least one
 
-    # -------------------------
+            for a, b in combinations(vars_i, 2):
+                self.add_clause([-a, -b])
+
     def encode_chain_exclusivity(self):
-        """Due catene di nodi diversi non possono condividere nodi fisici"""
-        for a, b in combinations(self.logical_nodes, 2):
-            chains_a = self.valid_chains[a]
-            chains_b = self.valid_chains[b]
-            for idx_a, chain_a in enumerate(chains_a):
-                for idx_b, chain_b in enumerate(chains_b):
-                    if set(chain_a) & set(chain_b):
-                        # non possono essere entrambe attive
-                        self.add_clause([-self.chain_var_map[(a, idx_a)], -self.chain_var_map[(b, idx_b)]],
-                                        "chain_exclusivity")
+        for i, j in combinations(self.logical_nodes, 2):
+            for idx_i, C in enumerate(self.valid_chains[i]):
+                setC = set(C)
+                v_i = self.chain_var_map[(i, idx_i)]
 
-    # -------------------------
+                for idx_j, D in enumerate(self.valid_chains[j]):
+                    if setC & set(D):
+                        v_j = self.chain_var_map[(j, idx_j)]
+                        self.add_clause([-v_i, -v_j])
+
     def encode_edge_consistency(self):
-        """Edge-consistency: due nodi logici connessi devono avere almeno un arco fisico tra le catene attive"""
         for i, j in self.G_log.edges():
-            chains_i = self.valid_chains[i]
-            chains_j = self.valid_chains[j]
-            for idx_i, chain_i in enumerate(chains_i):
-                for idx_j, chain_j in enumerate(chains_j):
-                    # se non esiste arco tra catene → proibire entrambe
-                    if not any(self.G_phys.has_edge(u, v) for u in chain_i for v in chain_j):
-                        self.add_clause([-self.chain_var_map[(i, idx_i)], -self.chain_var_map[(j, idx_j)]],
-                                        "edge_consistency")
-    def encode_fixed_mappings(self):
-        """
-        Impone che alcuni nodi logici usino solo catene
-        che contengono specifici nodi fisici.
-        """
-        fixed = self.embedding_constraints.get("fixed_mapping", {})
-        if not fixed:
-            return
+            for idx_i, C in enumerate(self.valid_chains[i]):
+                v_i = self.chain_var_map[(i, idx_i)]
+                for idx_j, D in enumerate(self.valid_chains[j]):
+                    v_j = self.chain_var_map[(j, idx_j)]
+                    if not any(
+                        self.G_phys.has_edge(u, v)
+                        for u in C for v in D
+                    ):
+                        self.add_clause([-v_i, -v_j])
 
-        for i, required_nodes in fixed.items():
-            required_nodes = set(required_nodes)
+    def add_blocking_clause_from_model(self, model, dimacs_path=None):
+            """
+            Aggiunge una blocking clause dal modello SAT per enumerare più soluzioni.
+            model: lista di lit positivi/negativi da una soluzione SAT
+            dimacs_path: opzionale, scrive subito la clausola anche sul file DIMACS
+            """
+            # Consideriamo solo le variabili positive della soluzione (quelle assegnate True)
+            active_chain_vars = [lit for lit in model if lit > 0 and lit in self.chain_var_map.values()]
+            if not active_chain_vars:
+                print("[WARN] Nessuna variabile di catena attiva nel modello, skipping blocking clause.")
+                return False
 
-            if i not in self.valid_chains:
-                continue
+            # Negiamo tutte le variabili attive → blocco la stessa soluzione
+            blocking_clause = [-lit for lit in active_chain_vars]
+            self.add_clause(blocking_clause)
+            # Aggiorna file DIMACS se fornito
+            if dimacs_path:
+                with open(dimacs_path, 'r+') as f:
+                    content = f.read()
+                    f.seek(0)
+                    lines = content.splitlines()
 
-            for idx, chain in enumerate(self.valid_chains[i]):
-                # se la catena NON contiene tutti i nodi richiesti → vietala
-                if not required_nodes.issubset(set(chain)):
-                    self.add_clause(
-                        [-self.chain_var_map[(i, idx)]],
-                        ctype="fixed_mapping"
-                    )
+                    # Incrementa il numero di clausole nell'header
+                    header = lines[0].split()
+                    if len(header) >= 4 and header[0] == 'p' and header[1] == 'cnf':
+                        num_vars, num_clauses = int(header[2]), int(header[3])
+                        num_clauses += 1
+                        lines[0] = f"p cnf {num_vars} {num_clauses}"
 
-                        
-    def add_blocking_clause_from_model(self, model):
-        """
-        Aggiunge una blocking clause che vieta esattamente
-        la selezione corrente delle catene logiche.
-        Usa SOLO le variabili di catena.
-        """
-        # variabili di catena attive nella soluzione
-        active_chain_vars = [
-            lit for lit in model
-            if lit > 0 and lit in self.chain_var_map.values()
-        ]
-
-        if not active_chain_vars:
-            return False
-
-        # blocking clause: almeno una deve cambiare
-        blocking_clause = [-lit for lit in active_chain_vars]
-        self.add_clause(blocking_clause, ctype="blocking")
-        return True
-
-
-    # -------------------------
-    def generate(self):
-        if not self.embeddable:
-            print(f"[WARN] Grafo non embeddabile: {self.reject_reasons}")
-            return 0, 0
-        print("[INFO] Generating chain variables...")
-        self.generate_chain_variables()
-        print("[INFO] Encoding fixed mappings...")
-        self.encode_fixed_mappings()
-        print("[INFO] Encoding exactly one chain per logical node...")
-        self.encode_exactly_one_chain_per_logical()
-        print("[INFO] Encoding chain exclusivity...")
-        self.encode_chain_exclusivity()
-        print("[INFO] Encoding edge consistency...")
-        self.encode_edge_consistency()
-        print(f"[INFO] CNF generata: {len(self.clauses)} clausole, {self.num_vars} variabili")
-        return self.num_vars, len(self.clauses)
-
-    # -------------------------
+                    # Scrivi la nuova clausola alla fine
+                    lines.append(' '.join(map(str, blocking_clause)) + ' 0')
+                    f.write('\n'.join(lines))
+            
+            print(f"[INFO] Blocking clause added: {blocking_clause}")
+            return True
+    # --------------------------------------------------
+    # DIMACS
+    # --------------------------------------------------
     def write_dimacs(self, path):
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, 'w') as f:
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        with open(path, "w") as f:
             f.write(f"p cnf {self.num_vars} {len(self.clauses)}\n")
-            for idx, c in enumerate(self.clauses, start=1):
-                f.write(' '.join(str(l) for l in c) + ' 0\n')
-        print(f"[INFO] File DIMACS salvato in: {path}")
+            for c in self.clauses:
+                f.write(" ".join(map(str, c)) + " 0\n")
+
+    # --------------------------------------------------
+    # Main
+    # --------------------------------------------------
+    def generate(self, output_path):
+        self.generate_connected_chains()
+        if not self.embeddable:
+            print("[UNSAT at generation]", self.reject_reasons)
+            return 0, 0
+        self.encode_exactly_one()
+        self.encode_chain_exclusivity()
+        self.encode_edge_consistency()
+
+        self.write_dimacs(output_path)
+        return self.num_vars, len(self.clauses)

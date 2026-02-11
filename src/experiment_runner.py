@@ -43,11 +43,9 @@ def run_experiment(cfg, max_attempts=None):
     # --- Generazione CNF ---
     print("[INFO] Generating CNF...")
     t0 = time.time()
-    num_vars, num_clauses = gen.generate()
-    time_cnf = time.time() - t0
-
     dimacs_path = os.path.join(exp_dir_base, f"exp_{exp_id}.cnf")
-    gen.write_dimacs(dimacs_path)
+    num_vars, num_clauses = gen.generate(dimacs_path)
+    time_cnf = time.time() - t0
 
     # --- Solving SAT ---
     print("[INFO] Solving SAT...")

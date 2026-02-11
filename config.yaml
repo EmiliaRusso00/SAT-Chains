@@ -2,64 +2,92 @@ experiments:
 
 # Rispetto al paper delle clique, ci si domanda se una Klxm+1 con chain = m+1 sia embeddabile anche se non native 
 
-    - id: 3
-      logical_graph: "graphs/K9.txt"
-      logical_graph_json: graphs/K9.json
-      physical_graph: "graphs/chimera2x2.txt"
-      physical_graph_json: graphs/chimera2x2.json
-      timeout_seconds: 600
-      embedding_constraints:
-        default_allowed_expansions: [1,2,3]
-
-    - id: 4
-      logical_graph: "graphs/K13.txt"
-      logical_graph_json: graphs/K13.json
-      physical_graph: "graphs/chimera3x3.txt"
-      physical_graph_json: graphs/chimera3x3.json
-      timeout_seconds: 600
-      embedding_constraints:
-        default_allowed_expansions: [1,2,3,4]
-
-    - id: 5
-      logical_graph: "graphs/K17.txt"
-      logical_graph_json: graphs/K17.json
-      physical_graph: "graphs/chimera4x4.txt"
-      physical_graph_json: graphs/chimera4x4.json
-      timeout_seconds: 600
-      embedding_constraints:
-        default_allowed_expansions: [1,2,3,4,5]
-    
-    - id: 6
-      logical_graph: "graphs/K21.txt"
-      logical_graph_json: graphs/K21.json
-      physical_graph: "graphs/chimera5x5.txt"
-      physical_graph_json: graphs/chimera5x5.json
-      timeout_seconds: 600
-      embedding_constraints:
-        default_allowed_expansions: [1,2,3,4,5,6]
+#   - id: 3
+#     logical_graph: "graphs/K9.txt"
+#     logical_graph_json: graphs/K9.json
+#     physical_graph: "graphs/chimera2x2.txt"
+#     physical_graph_json: graphs/chimera2x2.json
+#     timeout_seconds: 600
+#     embedding_constraints:
+#       default_allowed_expansions: [1,2,3]
+#
+#   - id: 4
+#     logical_graph: "graphs/K13.txt"
+#     logical_graph_json: graphs/K13.json
+#     physical_graph: "graphs/chimera3x3.txt"
+#     physical_graph_json: graphs/chimera3x3.json
+#     timeout_seconds: 600
+#     embedding_constraints:
+#       default_allowed_expansions: [1,2,3,4]
+#
+#   - id: 5
+#     logical_graph: "graphs/K17.txt"
+#     logical_graph_json: graphs/K17.json
+#     physical_graph: "graphs/chimera4x4.txt"
+#     physical_graph_json: graphs/chimera4x4.json
+#     timeout_seconds: 600
+#     embedding_constraints:
+#       default_allowed_expansions: [1,2,3,4,5]
+#   
+#   - id: 6
+#     logical_graph: "graphs/K21.txt"
+#     logical_graph_json: graphs/K21.json
+#     physical_graph: "graphs/chimera5x5.txt"
+#     physical_graph_json: graphs/chimera5x5.json
+#     timeout_seconds: 600
+#     embedding_constraints:
+#       default_allowed_expansions: [1,2,3,4,5,6]
 
 
 # Su cosa vanno fatti gli esperimenti.MinorMiner può: trovare un embedding con chain max = 4 Non può dire: “chain ≤ 3 è impossibile”
 
-    - id: 1
-      logical_graph: "graphs/K16.txt"
-      logical_graph_json: graphs/K16.json
+#   - id: 1
+#     logical_graph: "graphs/K16.txt"
+#     logical_graph_json: graphs/K16.json
+#     physical_graph: "graphs/zephyr1.txt"
+#     physical_graph_json: graphs/zephyr1.json
+#     timeout_seconds: 600
+#     embedding_constraints:
+#       default_allowed_expansions: [1,2]
+
+
+# Se trova l'embedding ci si potrebbe domandare se esiste un tentativo che usi chain max = 3 minore. 
+ #   - id: 2
+ #     logical_graph: "graphs/K16.txt"
+ #     logical_graph_json: graphs/K16.json
+ #     physical_graph: "graphs/zephyr1.txt"
+ #     physical_graph_json: graphs/zephyr1.json
+ #     timeout_seconds: 600
+ #     embedding_constraints:
+ #       default_allowed_expansions: [1,2]
+
+ #   - id: 3
+ #     logical_graph: "graphs/K20.txt"
+ #     logical_graph_json: graphs/K20.json
+ #     physical_graph: "graphs/zephyr1.txt"
+ #     physical_graph_json: graphs/zephyr1.json
+ #     timeout_seconds: 600
+ #     embedding_constraints:
+ #       default_allowed_expansions: [1,2]
+
+    - id: 4
+      logical_graph: "graphs/K8.txt"
+      logical_graph_json: graphs/K8.json
       physical_graph: "graphs/zephyr1.txt"
       physical_graph_json: graphs/zephyr1.json
       timeout_seconds: 600
       embedding_constraints:
         default_allowed_expansions: [1,2]
+        per_node:
+         0: [1]
+         1: [1]
+         2: [1]
+         3: [1]
+         4: [2]
+         5: [2]
+         6: [2]
+         7: [2]
 
-
-# Se trova l'embedding ci si potrebbe domandare se esiste un tentativo che usi chain max = 3 minore. 
-    - id: 2
-      logical_graph: "graphs/K16.txt"
-      logical_graph_json: graphs/K16.json
-      physical_graph: "graphs/zephyr1.txt"
-      physical_graph_json: graphs/zephyr1.json
-      timeout_seconds: 600
-      embedding_constraints:
-        default_allowed_expansions: [1,2,3]
 
 
 
