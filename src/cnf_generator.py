@@ -166,7 +166,7 @@ class CNFGenerator:
         self.encode_exactly_one()
         self.encode_chain_exclusivity()
         self.encode_edge_consistency()
-        print(f"[CNF Generation] Vars: {self.num_vars} | Clauses: {len(self.clauses)}")
 
+        print(f"[INFO] CNF generation completed: {self.num_vars} vars, {len(self.clauses)} clauses")
         self.write_dimacs(output_path)
         return self.num_vars, len(self.clauses)

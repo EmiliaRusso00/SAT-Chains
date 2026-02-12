@@ -174,7 +174,7 @@ def run_minorminer(G_logical, G_physical, exp, mode, out_dir, attempt, max_attem
 # MAIN PER TEST FULL (INVARIATO)
 # ---------------------------------------------------------
 def main():
-    with open("config.yaml", "r") as f:
+    with open("config.yaml", "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     experiments = config["experiments"]

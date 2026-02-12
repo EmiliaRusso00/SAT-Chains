@@ -168,7 +168,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    with open(args.config, "r") as f:
+    with open(args.config, "r", encoding="utf-8") as f:
         cfg_all = yaml.safe_load(f)
 
     ensure_dir("outputs")

@@ -1,3 +1,4 @@
 /outputs
 /graphs/*.json
-/graphs/*.txt
+/graphs/*.txt__pycache__/
+*.pyc
