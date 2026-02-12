@@ -77,7 +77,7 @@ def plot_embedding_results(G_logical, solution_json, save_dir, exp_id,
     # 3️Embedding SAT con nodi fisici etichettati
     chain_colors = ['yellow', 'red', 'cyan', 'green', 'orange', 'purple', 'magenta', 'pink', 'brown', 'olive', 'teal', 'navy', 'lime', 'coral',
                     'gold', 'salmon', 'turquoise', 'violet', 'indigo', 'chocolate', 'crimson', 'darkgreen', 'darkblue', 'darkred', 'darkorange'
-                    'darkcyan', 'darkmagenta', 'darkgoldenrod', 'darkolivegreen', 'darkslateblue', 'darkturquoise']
+                    'darkcyan', 'darkmagenta', 'darkgoldenrod', 'darkolivegreen', 'darkslateblue', 'darkturquoise' ]
 
     phys_to_logical = {}
     # ordina per nodo logico

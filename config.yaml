@@ -90,14 +90,33 @@ experiments:
 #          6: [2]
 #          7: [2]
 
-    - id: 7
-      logical_graph: "graphs/K7.txt"
-      logical_graph_json: graphs/K7.json
+#   - id: 7
+#     logical_graph: "graphs/K7.txt"
+#     logical_graph_json: graphs/K7.json
+#     physical_graph: "graphs/zephyr1.txt"
+#     physical_graph_json: graphs/zephyr1.json
+#     timeout_seconds: 600
+#     embedding_constraints:
+#        default_allowed_expansions: [1]
+
+#    - id: 8
+#      logical_graph: "graphs/K33.txt"
+#      logical_graph_json: graphs/K33.json
+#      physical_graph: "graphs/zephyr2.txt"
+#      physical_graph_json: graphs/zephyr2.json
+#      timeout_seconds: 600
+#      embedding_constraints:
+#         default_allowed_expansions: [1]
+
+    - id: 9
+      logical_graph: "graphs/chimera2,2,4.txt"
+      logical_graph_json: graphs/chimera2,2,4.json
       physical_graph: "graphs/zephyr1.txt"
       physical_graph_json: graphs/zephyr1.json
       timeout_seconds: 600
       embedding_constraints:
-         default_allowed_expansions: [1]
+       default_allowed_expansions: [1]
+
 
 
 
