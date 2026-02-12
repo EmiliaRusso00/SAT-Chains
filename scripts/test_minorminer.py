@@ -109,9 +109,11 @@ def run_minorminer(G_logical, G_physical, exp, mode, out_dir, attempt, max_attem
             f"Max chain: {max_chain} | Num fisici usati: {num_phys_used} | "
             f"Tempo: {elapsed:.4f}s"
         )
-    else:
+    elif respects_logical_edges(G_logical, embedding, G_physical):
         print(f"[MM Fail {attempt_str} | {mode.upper()}] Embedding non valido.")
 
+    else: 
+        print(f"[MM Fail {attempt_str} | {mode.upper()}] No embedding found.")
     result = {
         "experiment_id": exp["id"],
         "mode": mode,
