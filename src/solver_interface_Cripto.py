@@ -7,12 +7,18 @@ import os
 
 def _solve_process(dimacs_path, return_dict, num_threads):
     try:
+#        cmd = [
+#            "../../lingeling/plingeling",
+#            "-t", str(max(num_threads, 1)),
+#            dimacs_path
+#        ]
+#
         cmd = [
-            "../../lingeling/plingeling",
-            "-t", str(max(num_threads, 1)),
+            "../../kissat/build/kissat",
+            f"--threads={max(num_threads, 1)}",
             dimacs_path
         ]
-
+        
         proc = subprocess.run(
             cmd,
             stdout=subprocess.PIPE,
@@ -108,3 +114,4 @@ def solve_dimacs_file(dimacs_path, timeout_seconds=None, num_threads=None):
         "time": elapsed,
         "model": return_dict.get("model")
     }
+    
