@@ -5,7 +5,7 @@ import os
 
 from parser import read_graph, read_graph_json
 from cnf_generator import CNFGenerator
-from solver_interface import solve_dimacs_file
+from solver_interface_Cripto import solve_dimacs_file
 from metrics import write_experiment_output
 from utils import ensure_dir
 from plot_utils import plot_embedding_results
@@ -63,11 +63,20 @@ def run_experiment(cfg, max_attempts=None):
             break
 
         t_start = time.time()
+
+        threads_to_use = max(os.cpu_count() - 1, 1)
+        print(f"[INFO] Using {threads_to_use} threads for MultiThreads")
+
         res = solve_dimacs_file(
             dimacs_path,
             timeout_seconds=timeout,
-            cnf_gen=gen
-        )
+            num_threads=threads_to_use)
+# Se usi glucose 
+#        res = solve_dimacs_file(
+#            dimacs_path,
+#            timeout_seconds=timeout,
+#            cnf_gen=gen
+#        )
         sat_one_time = time.time() - t_start
         total_sat_time += sat_one_time
 

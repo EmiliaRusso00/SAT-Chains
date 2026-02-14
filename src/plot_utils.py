@@ -47,6 +47,7 @@ def plot_embedding_results(G_logical, solution_json, save_dir, exp_id,
     # ---------------------------
     # 1️ Grafo logico
     # ---------------------------
+    
     plt.figure(figsize=(6,6))
     nx.draw(G_logical, with_labels=show_labels, node_color='skyblue', node_size=200)
     plt.title(f"Logical Graph – Experiment {exp_id}")
