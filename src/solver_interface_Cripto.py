@@ -7,17 +7,17 @@ import os
 
 def _solve_process(dimacs_path, return_dict, num_threads):
     try:
-#        cmd = [
-#            "../../lingeling/plingeling",
-#            "-t", str(max(num_threads, 1)),
-#            dimacs_path
-#        ]
-#
         cmd = [
-            "../../kissat/build/kissat",
-            f"--threads={max(num_threads, 1)}",
+            "../../lingeling/plingeling",
+            "-t", str(max(num_threads, 1)),
             dimacs_path
         ]
+
+#        cmd = [
+ #           "../../kissat/build/kissat",
+ #           f"--threads={max(num_threads, 1)}",
+ #           dimacs_path
+ #       ]
         
         proc = subprocess.run(
             cmd,
