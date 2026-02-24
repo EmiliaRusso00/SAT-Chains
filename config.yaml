@@ -2,127 +2,445 @@ experiments:
 
 # Rispetto al paper delle clique, ci si domanda se una Klxm+1 con chain = m+1 sia embeddabile anche se non native 
 
-#   - id: 1
-#     logical_graph: "graphs/K4.txt"
-#     logical_graph_json: graphs/K4.json
-#     physical_graph: "graphs/zephyr1.txt"
-#     physical_graph_json: graphs/zephyr1.json
-#     timeout_seconds: 600
-#     embedding_constraints:
-#       default_allowed_expansions: [1]
-#
-#   - id: 2
-#     logical_graph: "graphs/K8.txt"
-#     logical_graph_json: graphs/K8.json
-#     physical_graph: "graphs/zephyr1.txt"
-#     physical_graph_json: graphs/zephyr1.json
-#     timeout_seconds: 600
-#     embedding_constraints:
-#       default_allowed_expansions: [1]
-#
-#   - id: 3
-#     logical_graph: "graphs/K8,8.txt"
-#     logical_graph_json: graphs/K8,8.json
-#     physical_graph: "graphs/zephyr1.txt"
-#     physical_graph_json: graphs/zephyr1.json
-#     timeout_seconds: 600
-#     embedding_constraints:
-#       default_allowed_expansions: [1]
-#   
-#   - id: 4
+
+# Questo da unsat!
+   - id: 1
+     logical_graph: "graphs/K8.txt"
+     logical_graph_json: graphs/K8.json
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: graphs/zephyr1.json
+     timeout_seconds: 600
+     embedding_constraints:
+      default_allowed_expansions: [1,2]
+      max_total_qubits: 11  
+  
+   - id: 2
+     logical_graph: "graphs/K9.txt"
+     logical_graph_json: "graphs/K9.json"
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: "graphs/zephyr1.json"
+     timeout_seconds: 600
+     embedding_constraints:
+       default_allowed_expansions: [1, 2]  
+       max_total_qubits: 13 
+ 
+   - id: 3
+     logical_graph: "graphs/K10.txt"
+     logical_graph_json: "graphs/K10.json"
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: "graphs/zephyr1.json"
+     timeout_seconds: 600
+     embedding_constraints:
+       default_allowed_expansions: [1, 2] 
+       max_total_qubits: 15
+
+   - id: 4
+     logical_graph: "graphs/K11.txt"
+     logical_graph_json: "graphs/K11.json"
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: "graphs/zephyr1.json"
+     timeout_seconds: 600
+     embedding_constraints:
+       default_allowed_expansions: [1, 2]
+       max_total_qubits: 19   
+
+   - id: 5
+     logical_graph: "graphs/K12.txt"
+     logical_graph_json: "graphs/K12.json"
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: "graphs/zephyr1.json"
+     timeout_seconds: 600
+     embedding_constraints:
+       default_allowed_expansions: [1, 2]   
+       max_total_qubits: 21  
+
+   - id: 6
+     logical_graph: "graphs/K13.txt"
+     logical_graph_json: "graphs/K13.json"
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: "graphs/zephyr1.json"
+     timeout_seconds: 600
+     embedding_constraints:
+       default_allowed_expansions: [1, 2, 3]   
+       max_total_qubits: 25   
+
+   - id: 7
+     logical_graph: "graphs/K14.txt"
+     logical_graph_json: "graphs/K14.json"
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: "graphs/zephyr1.json"
+     timeout_seconds: 600
+     embedding_constraints:
+       default_allowed_expansions: [1, 2, 3]   
+       max_total_qubits: 28   
+
+   - id: 8
+     logical_graph: "graphs/K15.txt"
+     logical_graph_json: "graphs/K15.json"
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: "graphs/zephyr1.json"
+     timeout_seconds: 600
+     embedding_constraints:
+       default_allowed_expansions: [1, 2, 3, 4]   
+       max_total_qubits: 33   
+
+   - id: 9
+     logical_graph: "graphs/K16.txt"
+     logical_graph_json: "graphs/K16.json"
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: "graphs/zephyr1.json"
+     timeout_seconds: 600
+     embedding_constraints:
+       default_allowed_expansions: [1, 2, 3]   
+       max_total_qubits: 39  
+
+   - id: 10
+     logical_graph: "graphs/K17.txt"
+     logical_graph_json: "graphs/K17.json"
+     physical_graph: "graphs/zephyr1.txt"
+     physical_graph_json: "graphs/zephyr1.json"
+     timeout_seconds: 600
+     embedding_constraints:
+       default_allowed_expansions: [1, 2, 3, 4]   
+
+#   - id: 11
 #     logical_graph: "graphs/K17.txt"
-#     logical_graph_json: graphs/K17.json
-#     physical_graph: "graphs/zephyr1.txt"
-#     physical_graph_json: graphs/zephyr1.json
+#     logical_graph_json: "graphs/K17.json"
+#     physical_graph: "graphs/zephyr2.txt"
+#     physical_graph_json: "graphs/zephyr2.json"
 #     timeout_seconds: 600
 #     embedding_constraints:
-#        default_allowed_expansions: [1,2]
-#        per_node:
-#         0: [1]
-#         1: [1]
-#         2: [1]
-#         3: [1]
-#         4: [1]
-#         5: [2]
-#         6: [2]
-#         7: [2]
-#         8: [2]
-#         9: [2]
-#         10: [2]
-#         11: [2]
-#         12: [2]
-#         13: [2]
-#         14: [2]
-#         15: [2]
-#         16: [2]
-#   - id: 5
-#     logical_graph: "graphs/K8.txt"
-#     logical_graph_json: graphs/K8.json
-#     physical_graph: "graphs/zephyr1.txt"
-#     physical_graph_json: graphs/zephyr1.json
+#       default_allowed_expansions: [1, 2, 3]
+#       per_node: 
+#        0: [1]
+#        1: [1]
+#        2: [2]
+#        3: [2]
+#        4: [2]
+#        5: [2]
+#        6: [2]
+#        7: [2]
+#        8: [2]
+#        9: [2]
+#        10: [2]
+#        11: [2]
+#        12: [2]
+#        13: [2]
+#        14: [2]
+#        15: [3]
+#        16: [3]
+#   - id: 12
+#     logical_graph: "graphs/K18.txt"
+#     logical_graph_json: "graphs/K18.json"
+#     physical_graph: "graphs/zephyr2.txt"
+#     physical_graph_json: "graphs/zephyr2.json"
 #     timeout_seconds: 600
 #     embedding_constraints:
-#        default_allowed_expansions: [1,2]
-#        per_node:
-#         0: [1]
-#         1: [1]
-#         2: [1]
-#         3: [1]
-#         4: [2]
-#         5: [2]
-#         6: [2]
-#         7: [2]
-#   - id: 6
-#     logical_graph: "graphs/K8.txt"
-#     logical_graph_json: graphs/K8.json
-#     physical_graph: "graphs/zephyr1.txt"
-#     physical_graph_json: graphs/zephyr1.json
+#       default_allowed_expansions: [1, 2, 3]
+#       per_node: 
+#        0: [1]
+#        1: [2]
+#        2: [2]
+#        3: [2]
+#        4: [2]
+#        5: [2]
+#        6: [2]
+#        7: [2]
+#        8: [2]
+#        9: [2]
+#        10: [2]
+#        11: [2]
+#        12: [2]
+#        13: [2]
+#        14: [2]
+#        15: [3]
+#        16: [3]
+#        17: [3]
+#   - id: 13
+#     logical_graph: "graphs/K19.txt"
+#     logical_graph_json: "graphs/K19.json"
+#     physical_graph: "graphs/zephyr2.txt"
+#     physical_graph_json: "graphs/zephyr2.json"
 #     timeout_seconds: 600
 #     embedding_constraints:
-#        default_allowed_expansions: [1,2]
-#        per_node:
-#         0: [1]
-#         1: [1]
-#         2: [1]
-#         3: [1]
-#         4: [1]
-#         5: [2]
-#         6: [2]
-#         7: [2]
-#   - id: 7
-#     logical_graph: "graphs/K7.txt"
-#     logical_graph_json: graphs/K7.json
-#     physical_graph: "graphs/zephyr1.txt"
-#     physical_graph_json: graphs/zephyr1.json
+#       default_allowed_expansions: [1, 2, 3]
+#       per_node: 
+#        0: [1]
+#        1: [2]
+#        2: [2]
+#        3: [2]
+#        4: [2]
+#        5: [2]
+#        6: [2]
+#        7: [2]
+#        8: [2]
+#        9: [2]
+#        10: [2]
+#        11: [2]
+#        12: [2]
+#        13: [2]
+#        14: [2]
+#        15: [3]
+#        16: [3]
+#        17: [3]
+#        18: [3]
+#   - id: 14
+#     logical_graph: "graphs/K20.txt"
+#     logical_graph_json: "graphs/K20.json"
+#     physical_graph: "graphs/zephyr2.txt"
+#     physical_graph_json: "graphs/zephyr2.json"
 #     timeout_seconds: 600
 #     embedding_constraints:
-#        default_allowed_expansions: [1]
-#   - id: 8
-#     logical_graph: "graphs/K33.txt"
-#     logical_graph_json: graphs/K33.json
+#       default_allowed_expansions: [1, 2, 3]
+#       per_node: 
+#        0: [2]
+#        1: [2]
+#        2: [2]
+#        3: [2]
+#        4: [2]
+#        5: [2]
+#        6: [2]
+#        7: [2]
+#        8: [2]
+#        9: [2]
+#        10: [2]
+#        11: [2]
+#        12: [2]
+#        13: [2]
+#        14: [2]
+#        15: [3]
+#        16: [3]
+#        17: [3]
+#        18: [3]
+#        19: [3]
+#   - id: 15
+#     logical_graph: "graphs/K21.txt"
+#     logical_graph_json: "graphs/K21.json"
+#     physical_graph: "graphs/zephyr2.txt"
+#     physical_graph_json: "graphs/zephyr2.json"
+#     timeout_seconds: 600
+#     embedding_constraints:
+#       default_allowed_expansions: [1, 2, 3]
+#       per_node: 
+#        0: [2]
+#        1: [2]
+#        2: [2]
+#        3: [2]
+#        4: [2]
+#        5: [2]
+#        6: [2]
+#        7: [2]
+#        8: [2]
+#        9: [2]
+#        10: [2]
+#        11: [2]
+#        12: [3]
+#        13: [3]
+#        14: [3]
+#        15: [3]
+#        16: [3]
+#        17: [3]
+#        18: [3]
+#        19: [3]
+#        20: [3]
+#   - id: 16
+#     logical_graph: "graphs/K22.txt"
+#     logical_graph_json: "graphs/K22.json"
+#     physical_graph: "graphs/zephyr2.txt"
+#     physical_graph_json: "graphs/zephyr2.json"
+#     timeout_seconds: 600
+#     embedding_constraints:
+#       default_allowed_expansions: [1, 2, 3]
+#       per_node: 
+#        0: [2]
+#        1: [2]
+#        2: [2]
+#        3: [2]
+#        4: [2]
+#        5: [2]
+#        6: [2]
+#        7: [2]
+#        8: [2]
+#        9: [2]
+#        10: [2]
+#        11: [2]
+#        12: [3]
+#        13: [3]
+#        14: [3]
+#        15: [3]
+#        16: [3]
+#        17: [3]
+#        18: [3]
+#        19: [3]
+#        20: [3]
+#        21: [3]
+#   - id: 17
+#     logical_graph: "graphs/K23.txt"
+#     logical_graph_json: "graphs/K23.json"
+#     physical_graph: "graphs/zephyr2.txt"
+#     physical_graph_json: "graphs/zephyr2.json"
+#     timeout_seconds: 600
+#     embedding_constraints:
+#       default_allowed_expansions: [1, 2, 3]
+#       per_node: 
+#        0: [2]
+#        1: [2]
+#        2: [2]
+#        3: [2]
+#        4: [2]
+#        5: [2]
+#        6: [2]
+#        7: [2]
+#        8: [2]
+#        9: [2]
+#        10: [2]
+#        11: [2]
+#        12: [3]
+#        13: [3]
+#        14: [3]
+#        15: [3]
+#        16: [3]
+#        17: [3]
+#        18: [3]
+#        19: [3]
+#        20: [3]
+#        21: [3]   
+#        22: [3]
+#
+#   - id: 18
+#     logical_graph: "graphs/K24.txt"
+#     logical_graph_json: graphs/K24.json
 #     physical_graph: "graphs/zephyr2.txt"
 #     physical_graph_json: graphs/zephyr2.json
 #     timeout_seconds: 600
 #     embedding_constraints:
-#        default_allowed_expansions: [1]
-
-#   - id: 9
-#     logical_graph: "graphs/chimera1,1,4.txt"
-#     logical_graph_json: graphs/chimera1,1,4.json
-#     physical_graph: "graphs/zephyr1.txt"
-#     physical_graph_json: graphs/zephyr1.json
+#      default_allowed_expansions: [1,2,3]
+#      per_node:
+#        0: [2]
+#        1: [2]
+#        2: [2]
+#        3: [2]
+#        4: [2]
+#        5: [2]
+#        6: [2]
+#        7: [2] 
+#        8: [2]
+#        9: [2]
+#        10: [2]
+#        11: [3]  
+#        12: [3]
+#        13: [3]
+#        14: [3]
+#        15: [3]
+#        16: [3]
+#        17: [3]
+#        18: [3]
+#        19: [3] 
+#        20: [3]
+#        21: [3]
+#        22: [3]
+#        23: [3]
+#   - id: 19
+#     logical_graph: "graphs/K25.txt"
+#     logical_graph_json: graphs/K25.json
+#     physical_graph: "graphs/zephyr2.txt"
+#     physical_graph_json: graphs/zephyr2.json
 #     timeout_seconds: 600
 #     embedding_constraints:
-#      default_allowed_expansions: [1]
+#      default_allowed_expansions: [1,2,3]
+#      per_node:
+#        0: [2]
+#        1: [2]
+#        2: [2]
+#        3: [2]
+#        4: [2]
+#        5: [2]
+#        6: [2]
+#        7: [2] 
+#        8: [2]
+#        9: [2]
+#        10: [2]
+#        11: [3]  
+#        12: [3]
+#        13: [3]
+#        14: [3]
+#        15: [3]
+#        16: [3]
+#        17: [3]
+#        18: [3]
+#        19: [3] 
+#        20: [3]
+#        21: [3]
+#        22: [3]
+#        23: [3]
 #
-    - id: 10
-      logical_graph: "graphs/K3.txt"
-      logical_graph_json: graphs/K5.json
-      physical_graph: "graphs/zephyr1.txt"
-      physical_graph_json: graphs/zephyr1.json
-      timeout_seconds: 600
-      embedding_constraints:
-       default_allowed_expansions: [1,2,3]
-
-
-
+#   - id: 12
+#     logical_graph: "graphs/K40.txt"
+#     logical_graph_json: graphs/K40.json
+#     physical_graph: "graphs/zephyr3.txt"
+#     physical_graph_json: graphs/zephyr3.json
+#     timeout_seconds: 600
+#     embedding_constraints:
+#      default_allowed_expansions: [1,2,3,4]
+#      per_node:
+#        0: [3]
+#        1: [4]
+#        2: [4]
+#        3: [4]
+#        4: [4]
+#        5: [4]
+#        6: [4]
+#        7: [4] 
+#        8: [4]
+#        9: [4]
+#        10: [4]
+#        11: [4]  
+#        12: [4]
+#        13: [4]
+#        14: [4]
+#        15: [4]
+#        16: [4]
+#        17: [4]
+#        18: [4]
+#        19: [4] 
+#        20: [4]
+#        21: [4]
+#        22: [4]
+#        23: [4]
+#        24: [4]
+#        25: [4]
+#        26: [4]
+#        27: [4]
+#        28: [4]
+#        29: [4]
+#        30: [4]
+#        31: [4] 
+#        32: [4]
+#        33: [4]
+#        34: [4]
+#        35: [4]  
+#        36: [4]
+#        37: [4]
+#        38: [4]
+#        39: [4]
+#  - id: 2
+#    logical_graph: "graphs/K9.txt"
+#    logical_graph_json: "graphs/K9.json"
+#    physical_graph: "graphs/zephyr1.txt"
+#    physical_graph_json: "graphs/zephyr1.json"
+#    timeout_seconds: 600
+#    embedding_constraints:
+#      default_allowed_expansions: [1, 2]   
+#      per_node: {}
+#      fixed_mapping: {}
+#      
+#  -  id: 4
+#     logical_graph: "graphs/K25.txt"
+#     logical_graph_json: "graphs/K25.json"
+#     physical_graph: "graphs/zephyr2.txt"
+#     physical_graph_json: "graphs/zephyr2.json"
+#     timeout_seconds: 600
+#     embedding_constraints:
+#       default_allowed_expansions: [1, 2, 3]  # chain max 3
+#       per_node: {}
+#       fixed_mapping: {}
